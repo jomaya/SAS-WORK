@@ -1,0 +1,241 @@
+/*Importing data into respective columns*/
+
+%macro stock(filename);
+infile "/home/shreyansh2419900/&filename..csv" dsd truncover ;
+informat date date9.;
+input date symbol $ series $ open high low ltp close volume turnover;
+format date mmddyy10.;
+if(date=.) then delete;
+variance=high-low;
+%mend;
+
+/*--------------------------SBI Processing---------------------------------------------*/
+data sbinimport(drop=volume turnover ltp close series);
+%stock(sbin);
+run;
+proc sql;
+select count(*) into : cnt from sbinimport;
+quit;
+proc sql;
+select sum(variance) into : Total from sbinimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=sbinimport out=sbinsemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from sbinsemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from sbinsemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+data sbinfinal;
+set sbinsemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+/*--------------------------SBI Processing---------------------------------------------*/
+
+/*--------------------------Apollo Processing---------------------------------------------*/
+
+data Apolloimport(drop=volume turnover ltp close series);
+%stock(Apollo);
+run;
+proc sql;
+select count(*) into : cnt from Apolloimport;
+quit;
+proc sql;
+select sum(variance) into : Total from Apolloimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=Apolloimport out=Apollosemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from Apollosemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from Apollosemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+
+data Apollofinal;
+set Apollosemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+
+/*--------------------------hindzinc Processing---------------------------------------------*/
+
+
+
+data hindzincimport(drop=volume turnover ltp close series);
+%stock(hindzinc);
+run;
+proc sql;
+select count(*) into : cnt from hindzincimport;
+quit;
+proc sql;
+select sum(variance) into : Total from hindzincimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=hindzincimport out=hindzincsemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from hindzincsemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from hindzincsemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+
+data hindzincfinal;
+set hindzincsemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+
+/*--------------------------hindzinc Processing---------------------------------------------*/
+
+/*--------------------------sunpharma Processing---------------------------------------------*/
+
+data sunpharmaimport(drop=volume turnover ltp close series);
+%stock(sunpharma);
+run;
+proc sql;
+select count(*) into : cnt from sunpharmaimport;
+quit;
+proc sql;
+select sum(variance) into : Total from sunpharmaimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=sunpharmaimport out=sunpharmasemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from sunpharmasemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from sunpharmasemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+
+data sunpharmafinal;
+set sunpharmasemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+
+/*--------------------------sunpharma Processing---------------------------------------------*/
+
+/*--------------------------coalindia Processing---------------------------------------------*/
+data coalindiaimport(drop=volume turnover ltp close series);
+%stock(coalindia);
+run;
+proc sql;
+select count(*) into : cnt from coalindiaimport;
+quit;
+proc sql;
+select sum(variance) into : Total from coalindiaimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=coalindiaimport out=coalindiasemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from coalindiasemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from coalindiasemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+
+data coalindiafinal;
+set coalindiasemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+
+/*--------------------------Arvind Processing---------------------------------------------*/
+
+data Arvindimport(drop=volume turnover ltp close series);
+%stock(Arvind);
+run;
+proc sql;
+select count(*) into : cnt from Arvindimport;
+quit;
+proc sql;
+select sum(variance) into : Total from Arvindimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=Arvindimport out=Arvindsemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from Arvindsemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from Arvindsemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+
+data Arvindfinal;
+set Arvindsemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+
+/*--------------------------Arvind Processing---------------------------------------------*/
+
+/*--------------------------ICICI Processing---------------------------------------------*/
+data iciciimport(drop=volume turnover ltp close series);
+%stock(icici);
+run;
+proc sql;
+select count(*) into : cnt from iciciimport;
+quit;
+proc sql;
+select sum(variance) into : Total from iciciimport;
+quit;
+%let nintyper=round(0.90*(&cnt.));
+%let nintyfiveper=round(0.95*(&cnt.));
+proc rank data=iciciimport out=icicisemifinal;
+var variance;
+ranks varrank;
+proc sql;
+select variance into : ninty from icicisemifinal where varrank=&nintyper.;
+quit; 
+proc sql;
+select variance into : nintyfive from icicisemifinal where varrank=&nintyfiveper.;
+quit; 
+run;
+
+data icicifinal;
+set icicisemifinal(drop=varrank open);
+totalaverage=(&Total.)/(&cnt.);
+nintypercentile=&ninty.;
+nintyfivepercentile=&nintyfive.;
+run;
+
+/*--------------------------ICICI Processing---------------------------------------------*/
+
+/*--------------------------Final Processing---------------------------------------------*/
+
+data final;
+merge icicifinal hindzincfinal sunpharmafinal coalindiafinal Arvindfinal Apollofinal sbinfinal;
+by symbol;
+run;
